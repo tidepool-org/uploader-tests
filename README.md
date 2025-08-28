@@ -19,10 +19,10 @@ Connect the CONTROL port on the Cynthion to your computer, the TARGET C port to 
 Linux: `sudo mount -t vfat -o loop emulator/onetouch/disk.img /mnt`
 
 MacOS:
+
 ```
-sudo mkdir /Volumes/emulator
-hdiutil attach -mounntpoint /Volumes/emulator emulator/onetouch/disk.img
-sudo mount -t msdos <name of disk, e.g. /dev/disk2> /Volumes/emulator
+hdiutil create -o disk.dmg -size 100m -layout GPTSPUD -fs "MS-DOS FAT16" -volname "LIFESCAN"
+hdiutil attach -nobrowse disk.dmg
 ```
 
 and then run: `python emulator/onetouch/oneTouchVerio.py`

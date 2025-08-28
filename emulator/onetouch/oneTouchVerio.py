@@ -17,6 +17,7 @@
 import logging
 import struct
 import os
+import sys
 
 from facedancer import main
 from facedancer.devices.umass import USBMassStorageDevice
@@ -76,9 +77,17 @@ class VerioImage(RawDiskImage):
         super().put_data(address, padded_data)
 
 
+# usage instructions
+if len(sys.argv)==1:
+    print("Usage: onetouchVerio.py disk.img")
+    sys.exit(1)
+
+# get disk image filename and clear arguments
+filename = sys.argv[1]
+sys.argv = [sys.argv[0]]
+
 # open our disk image
-script_dir = os.path.dirname(os.path.abspath(__file__))
-disk_image = VerioImage(os.path.join(script_dir, 'disk.img'), 512, verbose=3)
+disk_image = RawDiskImage(filename, 512, verbose=3)
 
 # create the device
 device = USBMassStorageDevice(disk_image,
