@@ -72,6 +72,12 @@ class VerioImage(RawDiskImage):
             case _:
                 pass
 
+        if address == 2 or address == 212:
+            # Windows tries to write to the device, which will checkDevice fail as it expects
+            # the device to be completely empty at start
+            print("don't write")
+            data = bytes([0x00])
+
         padded_data = data + b'\x00' * (self.block_size - len(data))
 
         super().put_data(address, padded_data)
@@ -87,7 +93,7 @@ filename = sys.argv[1]
 sys.argv = [sys.argv[0]]
 
 # open our disk image
-disk_image = RawDiskImage(filename, 512, verbose=3)
+disk_image = VerioImage(filename, 512, verbose=3)
 
 # create the device
 device = USBMassStorageDevice(disk_image,
@@ -114,4 +120,6 @@ main(device, hello())
 #
 # On MacOS:
 #
-#    hdiutil attach -mountpoint /mnt disk.img
+#    hdiutil create -o disk.dmg -size 100m -fs "MS-DOS FAT16" -volname "LIFESCAN"
+#    dd if=/dev/zero of=zeros.bin bs=1 count=10
+#    dd if=zeros.bin of=disk.dmg bs=1 seek=1024 conv=notrunc
