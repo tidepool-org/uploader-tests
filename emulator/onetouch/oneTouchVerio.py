@@ -16,7 +16,6 @@
 
 import logging
 import struct
-import os
 import sys
 
 from facedancer import main
@@ -112,14 +111,17 @@ async def hello():
 main(device, hello())
 
 
-# Creating a disk image for testing:
-#
-#    dd if=/dev/zero of=disk.img bs=1M count=100
-#    mkfs.fat -F 16 -n LIFESCAN disk.img
-#    mount -t vfat -o loop disk.img /mnt
-#
-# On MacOS:
+# Creating a disk image for testing on MacOS:
 #
 #    hdiutil create -o disk.dmg -size 100m -fs "MS-DOS FAT16" -volname "LIFESCAN"
 #    dd if=/dev/zero of=zeros.bin bs=1 count=10
 #    dd if=zeros.bin of=disk.dmg bs=1 seek=1024 conv=notrunc
+#
+# Or on Linux:
+#
+#    dd if=/dev/zero of=disk.img bs=1M count=100
+#    parted disk.img --script mklabel msdos
+#    parted disk.img --script mkpart primary fat16 1MiB 100%
+#    sudo losetup --find --partscan --show disk.img
+#    sudo mkfs.fat -F 16 -n LIFESCAN /dev/loopXXX
+#    sudo losetup -d /dev/loopXX
