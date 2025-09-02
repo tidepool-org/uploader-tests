@@ -15,14 +15,12 @@ pip install facedancer
 
 Connect the CONTROL port on the Cynthion to your computer, the TARGET C port to the target device (which can also be your own computer, i.e., where Tidepool Uploader is running). Then run the script, e.g. to emulate a OneTouch Verio Flex meter to upload, run:
 
+`python emulator/onetouch/oneTouchVerio.py disk.dmg`
 
-Linux: `sudo mount -t vfat -o loop emulator/onetouch/disk.img /mnt`
-
-MacOS:
+If you don't have a disk.dmg, you can create one using the following command on MacOS:
 
 ```
-hdiutil create -o disk.dmg -size 100m -layout GPTSPUD -fs "MS-DOS FAT16" -volname "LIFESCAN"
-hdiutil attach -nobrowse disk.dmg
+hdiutil create -o disk.dmg -size 100m -fs "MS-DOS FAT16" -volname "LIFESCAN"
+dd if=/dev/zero of=zeros.bin bs=1 count=10
+dd if=zeros.bin of=disk.dmg bs=1 seek=1024 conv=notrunc
 ```
-
-and then run: `python emulator/onetouch/oneTouchVerio.py`
