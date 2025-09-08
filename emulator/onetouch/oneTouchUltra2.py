@@ -53,10 +53,10 @@ def received(endpoint, data):
             # TODO: send wrong date/time, and handle setting date/time
         case "DMP":
             # All records
-            header = 'P 002,"ABCDE1234","MG/DL "'
+            header = 'P 002,"ABCDE1234","MG/DL "' # Header shows number of records, serial number, and units
             device.transmit(f'{header} {checksum(header)}\r\n' \
                 'P "FRI","07/14/17","10:31:12   ","  098 ","N","00", 00 09AE\r\n' \
-                'P "FRI","07/14/17","10:10:53   ","  649 ","N","00", 00 09B2\r\n')
+                'P "FRI","07/14/17","10:10:53   ","  649 ","N","00", 00 09B2\r\n') # records show date, time, glucose value, status, flags and checksum
             logging.info("Sent records")
         case _:
             print('Unexpected packet')
